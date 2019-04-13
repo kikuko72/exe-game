@@ -31,10 +31,10 @@ const GROUP = {
 }
 
 class Character {
-    constructor(group, position, hp) {
-        this.group = group
-        this.position = position
-        this.hp = hp
+    constructor(state) {
+        this.group = state.group
+        this.position = state.position
+        this.hp = state.hp
     }
 }
 
