@@ -32,6 +32,7 @@ const GROUP = {
 
 class Character {
     constructor(state) {
+        this.id = state.id
         this.group = state.group
         this.position = state.position
         this.hp = state.hp
@@ -55,6 +56,10 @@ class Field {
         return this.areaMap.get(position)
     }
 
+    getObjects(position) {
+        return this.objects.filter((o) => o.position === position)
+    }
+
     stealArea(altOwner, position) {
         const altMap = patchMap(this.areaMap, position, altOwner)
         return this._patchField({areaMap: altMap}, this)
@@ -73,5 +78,6 @@ const initArea = () => new Map([
     [pos(0,2), GROUP.ENEMY], [pos(1,2), GROUP.ENEMY], [pos(2,2), GROUP.ENEMY], [pos(3,2), GROUP.PLAYER], [pos(4,2), GROUP.PLAYER], [pos(5,2), GROUP.PLAYER]  
 ])
 
-const createPlayer = () => new Character({group: GROUP.PLAYER, position: pos(4,1), hp: 100})
-const createEnemy = (state) => new Character({group: GROUP.ENEMY, position: state.position, hp: state.hp})
+const PLAYER_ID = 'player'
+const createPlayer = () => new Character({id: PLAYER_ID, group: GROUP.PLAYER, position: pos(4,1), hp: 100})
+const createEnemy = (state) => new Character({id: state.id, group: GROUP.ENEMY, position: state.position, hp: state.hp})
