@@ -12,11 +12,31 @@ const VisibleObject = (props) => {
     )
 }
 
+const HitPoint = (props) => {
+    if (typeof props.object.hp !== 'undefined' && props.object.isCharacter) {
+        const classes = ['hit-point']
+        const digits = ((n) => n.toString().length)(props.object.hp)
+        classes.push('digits-' + digits)
+        return (
+            <div className={classes.join(' ')}>{props.object.hp}</div>
+        )
+    }
+
+    return null
+}
+
+const CellContainer = (props) => (
+    <div className="area-cell-container">
+        <VisibleObject object={props.object}/>
+        <HitPoint object={props.object}/>
+    </div>
+)
+
 const AreaView = (props) => {
     const classes = ['area-cell']
     classes.push(props.group === GROUP.PLAYER ? 'player-own' : 'enemy-own')
 
-    const objects = props.objects.map((o) => <VisibleObject key={o.id} object={o}/>)
+    const objects = props.objects.map((o) => <CellContainer key={o.id} object={o}/>)
     return (
         <div className={classes.join(' ')}>
             {objects}
