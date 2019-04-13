@@ -46,8 +46,9 @@ const patchMap = (srcMap, key, value) => {
 }
 
 class Field {
-    constructor(areaMap) {
+    constructor(areaMap, objects) {
         this.areaMap = areaMap;
+        this.objects = objects
     }
 
     getOwner(x, y) {
@@ -61,7 +62,8 @@ class Field {
 
     _patchField(altState, oldField) {
         const areaMap = altState.areaMap || oldField.areaMap
-        return new Field(areaMap)
+        const objects = altState.objects || oldField.objects
+        return new Field(areaMap, objects)
     }
 }
 
@@ -70,3 +72,6 @@ const initArea = () => new Map([
     [pos(0,1), GROUP.ENEMY], [pos(1,1), GROUP.ENEMY], [pos(2,1), GROUP.ENEMY], [pos(3,1), GROUP.PLAYER], [pos(4,1), GROUP.PLAYER], [pos(5,1), GROUP.PLAYER],
     [pos(0,2), GROUP.ENEMY], [pos(1,2), GROUP.ENEMY], [pos(2,2), GROUP.ENEMY], [pos(3,2), GROUP.PLAYER], [pos(4,2), GROUP.PLAYER], [pos(5,2), GROUP.PLAYER]  
 ])
+
+const createPlayer = () => new Character({group: GROUP.PLAYER, position: pos(4,1), hp: 100})
+const createEnemy = (state) => new Character({group: GROUP.ENEMY, position: state.position, hp: state.hp})
