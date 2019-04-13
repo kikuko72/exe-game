@@ -15,14 +15,12 @@
     background-color: yellow
 }
 
-.player-own {
-    border-color: blue;
-    color: blue
+.area-cell.player-own {
+    border-color: blue
 }
 
-.enemy-own {
-    border-color: red;
-    color: red
+.area-cell.enemy-own {
+    border-color: red
 }
 
 .visible-object {
