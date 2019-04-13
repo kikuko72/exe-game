@@ -48,9 +48,9 @@ const patchMap = (srcMap, key, value) => {
 }
 
 class Field {
-    constructor(areaMap, objects) {
+    constructor(areaMap, objectMap) {
         this.areaMap = areaMap;
-        this.objects = objects
+        this.objectMap = objectMap
     }
 
     getOwner(position) {
@@ -58,7 +58,7 @@ class Field {
     }
 
     getObjects(position) {
-        return this.objects.filter((o) => o.position === position)
+        return [...this.objectMap.values()].filter((o) => o.position === position)
     }
 
     stealArea(altOwner, position) {
@@ -78,6 +78,8 @@ const initArea = () => new Map([
     [pos(0,1), GROUP.ENEMY], [pos(1,1), GROUP.ENEMY], [pos(2,1), GROUP.ENEMY], [pos(3,1), GROUP.PLAYER], [pos(4,1), GROUP.PLAYER], [pos(5,1), GROUP.PLAYER],
     [pos(0,2), GROUP.ENEMY], [pos(1,2), GROUP.ENEMY], [pos(2,2), GROUP.ENEMY], [pos(3,2), GROUP.PLAYER], [pos(4,2), GROUP.PLAYER], [pos(5,2), GROUP.PLAYER]  
 ])
+
+const initObjects = (objectArray) => new Map(objectArray.map((o) => [o.id, o]))
 
 const PLAYER_ID = 'player'
 const createPlayer = () => new Character({id: PLAYER_ID, group: GROUP.PLAYER, position: pos(4,1), hp: 100})
