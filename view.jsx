@@ -21,7 +21,7 @@ const AreaView = (props) => {
 
 const FieldView = (props) => {
     const area = ALL_POSITIONS.map((row) => {
-        const columns = row.map(cell => <AreaView group={props.field.getOwner(cell.x, cell.y)} key={cell.x + '-' + cell.y}/>)
+        const columns = row.map(pos => <AreaView group={props.field.getOwner(pos)} key={pos.x + '-' + pos.y}/>)
         return (
             <div className="area-row" key={row[0].y}>
                 {columns}

@@ -51,12 +51,12 @@ class Field {
         this.objects = objects
     }
 
-    getOwner(x, y) {
-        return this.areaMap.get(pos(x,y))
+    getOwner(position) {
+        return this.areaMap.get(position)
     }
 
-    stealArea(altOwner, x, y) {
-        const altMap = patchMap(this.areaMap, pos(x,y), altOwner)
+    stealArea(altOwner, position) {
+        const altMap = patchMap(this.areaMap, position, altOwner)
         return this._patchField({areaMap: altMap}, this)
     }
 
