@@ -1,9 +1,20 @@
 'use strict'
 
+const Direction = {
+    UP: {x:0, y:-1},
+    RIGHT: {x:1, y:0},
+    DOWN: {x:0, y:1},
+    LEFT: {x:-1, y:0}
+}
+
 class Position {
     constructor(x, y) {
         this.x = x
         this.y = y
+    }
+
+    next(direction) {
+        return pos(this.x + direction.x, this.y + direction.y)
     }
 }
 
@@ -14,6 +25,9 @@ const ALL_POSITIONS = [
 ]
 
 const pos = function(x, y) {
+    if (x < 0 || x > 5 || y < 0 || y > 2) {
+        return undefined
+    }
     return ALL_POSITIONS[y][x];
 }
 
