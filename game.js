@@ -32,17 +32,31 @@ const pos = function(x, y) {
 }
 
 
-class Area {
-    constructor(position, owner) {
-        this.position = position
-        this.owner = owner
-    }
-}
-
 const GROUP = {
     PLAYER: {owner: 'player'},
     ENEMY: {owner: 'enemy'}
 }
+
+class AreaState {
+    constructor(owner, condition) {
+        this.owner = owner
+        this.condition = condition
+    }
+
+    stolenBy(altOwner) {
+        return new AreaState(altOwner, this.condition)
+    }
+
+    newCondition(condition) {
+        return new AreaState(this.owner, condition)
+    }
+}
+const CONDITION = {
+    NORMAL: {condition: 'normal'},
+    HOLE: {condition: 'hole'}
+}
+const PLAYER_AREA = new AreaState(GROUP.PLAYER, CONDITION.NORMAL)
+const ENEMY_AREA = new AreaState(GROUP.ENEMY, CONDITION.NORMAL)
 
 class Character {
     constructor(state) {
@@ -68,8 +82,12 @@ class Field {
         this.objectMap = objectMap
     }
 
-    getOwner(position) {
+    getArea(position) {
         return this.areaMap.get(position)
+    }
+
+    getOwner(position) {
+        return this.areaMap.get(position).owner
     }
 
     getObjects(position) {
@@ -77,7 +95,8 @@ class Field {
     }
 
     stealArea(altOwner, position) {
-        const altMap = patchMap(this.areaMap, position, altOwner)
+        const target = this.areaMap.get(position);
+        const altMap = patchMap(this.areaMap, position, target.stolenBy(altOwner))
         return this._patchField({areaMap: altMap}, this)
     }
 
@@ -88,11 +107,19 @@ class Field {
     }
 }
 
-const initArea = () => new Map([
-    [pos(0,0), GROUP.ENEMY], [pos(1,0), GROUP.ENEMY], [pos(2,0), GROUP.ENEMY], [pos(3,0), GROUP.PLAYER], [pos(4,0), GROUP.PLAYER], [pos(5,0), GROUP.PLAYER],
-    [pos(0,1), GROUP.ENEMY], [pos(1,1), GROUP.ENEMY], [pos(2,1), GROUP.ENEMY], [pos(3,1), GROUP.PLAYER], [pos(4,1), GROUP.PLAYER], [pos(5,1), GROUP.PLAYER],
-    [pos(0,2), GROUP.ENEMY], [pos(1,2), GROUP.ENEMY], [pos(2,2), GROUP.ENEMY], [pos(3,2), GROUP.PLAYER], [pos(4,2), GROUP.PLAYER], [pos(5,2), GROUP.PLAYER]  
-])
+const initArea = (entries) => {
+    const area = new Map([
+        [pos(0,0), ENEMY_AREA], [pos(1,0), ENEMY_AREA], [pos(2,0), ENEMY_AREA], [pos(3,0), PLAYER_AREA], [pos(4,0), PLAYER_AREA], [pos(5,0), PLAYER_AREA],
+        [pos(0,1), ENEMY_AREA], [pos(1,1), ENEMY_AREA], [pos(2,1), ENEMY_AREA], [pos(3,1), PLAYER_AREA], [pos(4,1), PLAYER_AREA], [pos(5,1), PLAYER_AREA],
+        [pos(0,2), ENEMY_AREA], [pos(1,2), ENEMY_AREA], [pos(2,2), ENEMY_AREA], [pos(3,2), PLAYER_AREA], [pos(4,2), PLAYER_AREA], [pos(5,2), PLAYER_AREA]  
+    ])
+
+    if (typeof entries !== 'undefined' && entries !== null) {
+        entries.forEach((e) => area.set(e[0], e[1]))
+    }
+
+    return area
+}
 
 const initObjects = (objectArray) => new Map(objectArray.map((o) => [o.id, o]))
 

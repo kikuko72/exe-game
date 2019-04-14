@@ -1,7 +1,8 @@
 'use strict'
 
 const REPRESENTATION_MAP = new Map([
-    [PLAYER_ID, '人']
+    [PLAYER_ID, '人'],
+    [CONDITION.HOLE, '穴']
 ])
 
 const VisibleObject = (props) => {
@@ -25,7 +26,7 @@ const HitPoint = (props) => {
     return null
 }
 
-const CellContainer = (props) => (
+const CellObjects = (props) => (
     <div className="area-cell-container">
         <VisibleObject object={props.object}/>
         <HitPoint object={props.object}/>
@@ -34,12 +35,17 @@ const CellContainer = (props) => (
 
 const AreaView = (props) => {
     const classes = ['area-cell']
-    classes.push(props.group === GROUP.PLAYER ? 'player-own' : 'enemy-own')
+    classes.push(props.area.owner === GROUP.PLAYER ? 'player-own' : 'enemy-own')
 
-    const objects = props.objects.map((o) => <CellContainer key={o.id} object={o}/>)
+    const objects = props.objects.map((o) => <CellObjects key={o.id} object={o}/>)
     return (
         <div className={classes.join(' ')}>
-            {objects}
+            <div className="area-cell-container">
+                <div className="area-condition">
+                    {REPRESENTATION_MAP.get(props.area.condition)}
+                </div>
+                {objects}
+            </div>
         </div>
     )
 }
@@ -48,7 +54,7 @@ const FieldView = (props) => {
     const area = ALL_POSITIONS.map((row) => {
         const columns = row.map(pos =>
             <AreaView key={pos.x + '-' + pos.y}
-                      group={props.field.getOwner(pos)}
+                      area={props.field.getArea(pos)}
                       objects={props.field.getObjects(pos)}/>
         )
         return (

@@ -23,6 +23,12 @@
     border-color: red
 }
 
+.area-condition {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.25rem;
+}
+
 .area-cell-container {
     position: absolute;
 }
