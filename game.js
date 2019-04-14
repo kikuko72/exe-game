@@ -51,6 +51,7 @@ class Character {
         this.position = state.position
         this.hp = state.hp
         this.isCharacter = true
+        this.isOccupier = true
     }
 }
 
