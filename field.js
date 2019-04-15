@@ -80,15 +80,9 @@ class Field {
         return [...this.objectMap.values()].filter((o) => o.position === position)
     }
 
-    stealArea(altOwner, position) {
-        const target = this.areaMap.get(position);
-        const altMap = patchMap(this.areaMap, position, target.stolenBy(altOwner))
-        return this._patchField({areaMap: altMap}, this)
-    }
-
-    _patchField(altState, oldField) {
-        const areaMap = altState.areaMap || oldField.areaMap
-        const objectMap = altState.objectMap || oldField.objectMap
+    acceptPatch(patchDict) {
+        const areaMap = patchDict.areaMap ? patchDict.areaMap.applyTo(this.areaMap) : this.areaMap
+        const objectMap = patchDict.objectMap ? patchDict.objectMap.applyTo(this.objectMap) : this.objectMap
         return new Field(areaMap, objectMap)
     }
 }
@@ -101,7 +95,7 @@ const initArea = (entries) => {
     ])
 
     if (typeof entries !== 'undefined' && entries !== null) {
-        entries.forEach((e) => area.set(e[0], e[1]))
+        return new Patch(entries).applyTo(area)
     }
 
     return area

@@ -1,7 +1,17 @@
 'use strict'
 
-const patchMap = (srcMap, key, value) => {
-    const altMap = new Map([...srcMap.entries()])
-    altMap.set(key, value)
-    return altMap
+class Patch {
+    constructor(entries) {
+        this.entries = entries
+    }
+
+    applyTo(map) {
+        const altMap = new Map([...map.entries()])
+        this.entries.forEach((e) => altMap.set(e[0], e[1]))
+        return altMap
+    }
+
+    merge(another) {
+        return new Patch(this.entries.concat(another.entries))
+    }
 }

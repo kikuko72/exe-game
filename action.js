@@ -25,6 +25,6 @@ class Move {
     }
 
     toPatch() {
-        return [this.objectId, this.target.move(this.direction)]
+        return new Patch([[this.objectId, this.target.move(this.direction)]])
     }
 }
