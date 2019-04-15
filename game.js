@@ -1,6 +1,6 @@
 'use strict'
 
-const Direction = {
+const DIRECTION = {
     UP: {x:0, y:-1},
     RIGHT: {x:1, y:0},
     DOWN: {x:0, y:1},
@@ -66,6 +66,11 @@ class Character {
         this.hp = state.hp
         this.isCharacter = true
         this.isOccupier = true
+        this.isFloating = false
+    }
+
+    move(toPosition) {
+        return new Character({id: this.id, group: this.group, position: toPosition, hp: this.hp})
     }
 }
 
@@ -100,10 +105,32 @@ class Field {
         return this._patchField({areaMap: altMap}, this)
     }
 
+    move(objectId, direction) {
+        const target = this.objectMap.get(objectId)
+        const toPosition = target.position.next(direction)
+        if (!toPosition) {
+            return null
+        }
+        const multiOccupiers = this.getObjects(toPosition).filter((o) => target.isOccupier && o.isOccupier).length > 0
+
+        const targetAreaState = this.getArea(toPosition)
+        const falling = targetAreaState.condition === CONDITION.HOLE && !target.isFloating
+        const enterable = targetAreaState.owner === target.group
+
+        const valid = !multiOccupiers && !falling && enterable
+
+        if (!valid) {
+            return null
+        }
+
+        const moved = patchMap(this.objectMap, objectId, target.move(toPosition))
+        return this._patchField({objectMap: moved}, this)
+    }
+
     _patchField(altState, oldField) {
         const areaMap = altState.areaMap || oldField.areaMap
-        const objects = altState.objects || oldField.objects
-        return new Field(areaMap, objects)
+        const objectMap = altState.objectMap || oldField.objectMap
+        return new Field(areaMap, objectMap)
     }
 }
 
