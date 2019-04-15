@@ -80,10 +80,29 @@ class Field {
         return [...this.objectMap.values()].filter((o) => o.position === position)
     }
 
-    acceptPatch(patchDict) {
-        const areaMap = patchDict.areaMap ? patchDict.areaMap.applyTo(this.areaMap) : this.areaMap
-        const objectMap = patchDict.objectMap ? patchDict.objectMap.applyTo(this.objectMap) : this.objectMap
+    acceptPatch(fieldPatch) {
+        const areaMap = fieldPatch.areaMap ? fieldPatch.areaMap.applyTo(this.areaMap) : this.areaMap
+        const objectMap = fieldPatch.objectMap ? fieldPatch.objectMap.applyTo(this.objectMap) : this.objectMap
         return new Field(areaMap, objectMap)
+    }
+}
+
+class FieldPatch {
+    constructor(areaMapPatch, objectMapPatch) {
+        this.areaMap = areaMapPatch;
+        this.objectMap = objectMapPatch
+    }
+}
+
+class AreaPatch {
+    constructor(areaMapPatch) {
+        this.areaMap = areaMapPatch;
+    }
+}
+
+class ObjectsPatch {
+    constructor(objectMapPatch) {
+        this.objectMap = objectMapPatch
     }
 }
 

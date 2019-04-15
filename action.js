@@ -24,9 +24,9 @@ class Move {
         return valid
     }
 
-    toPatch() {
+    toFieldPatch() {
         if (this.isValid()) {
-            return new Patch([[this.objectId, this.target.move(this.direction)]])
+            return new ObjectsPatch(new Patch([[this.objectId, this.target.move(this.direction)]]))
         }
         return null
     }
