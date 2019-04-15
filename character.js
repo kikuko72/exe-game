@@ -11,8 +11,8 @@ class Character {
         this.isFloating = false
     }
 
-    move(toPosition) {
-        return new Character({id: this.id, group: this.group, position: toPosition, hp: this.hp})
+    move(direction) {
+        return new Character({id: this.id, group: this.group, position: this.position.next(direction), hp: this.hp})
     }
 }
 

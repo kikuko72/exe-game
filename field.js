@@ -72,6 +72,10 @@ class Field {
         return this.areaMap.get(position).owner
     }
 
+    getObjectById(objectId) {
+        return this.objectMap.get(objectId)
+    }
+
     getObjects(position) {
         return [...this.objectMap.values()].filter((o) => o.position === position)
     }
@@ -80,28 +84,6 @@ class Field {
         const target = this.areaMap.get(position);
         const altMap = patchMap(this.areaMap, position, target.stolenBy(altOwner))
         return this._patchField({areaMap: altMap}, this)
-    }
-
-    move(objectId, direction) {
-        const target = this.objectMap.get(objectId)
-        const toPosition = target.position.next(direction)
-        if (!toPosition) {
-            return null
-        }
-        const multiOccupiers = this.getObjects(toPosition).filter((o) => target.isOccupier && o.isOccupier).length > 0
-
-        const targetAreaState = this.getArea(toPosition)
-        const falling = targetAreaState.condition === CONDITION.HOLE && !target.isFloating
-        const enterable = targetAreaState.owner === target.group
-
-        const valid = !multiOccupiers && !falling && enterable
-
-        if (!valid) {
-            return null
-        }
-
-        const moved = patchMap(this.objectMap, objectId, target.move(toPosition))
-        return this._patchField({objectMap: moved}, this)
     }
 
     _patchField(altState, oldField) {
