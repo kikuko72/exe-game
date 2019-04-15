@@ -59,9 +59,9 @@ const PLAYER_AREA = new AreaState(GROUP.PLAYER, CONDITION.NORMAL)
 const ENEMY_AREA = new AreaState(GROUP.ENEMY, CONDITION.NORMAL)
 
 class Field {
-    constructor(areaMap, objectMap) {
+    constructor(areaMap, occupierMap) {
         this.areaMap = areaMap;
-        this.objectMap = objectMap
+        this.occupierMap = occupierMap
     }
 
     getArea(position) {
@@ -73,24 +73,48 @@ class Field {
     }
 
     getObjectById(objectId) {
-        return this.objectMap.get(objectId)
+        return this.occupierMap.get(objectId)
     }
 
     getObjects(position) {
-        return [...this.objectMap.values()].filter((o) => o.position === position)
+        return [...this.occupierMap.values()].filter((o) => o.position === position)
+    }
+
+    getObjectById(objectId) {
+        return this.occupierMap.get(objectId)
+    }
+
+    getOccupier(position) {
+        const found = [...this.occupierMap.values()].filter((o) => o.position === position)
+
+        if (found.length > 1) {
+            throw new Error('invalid occupierMap')
+        }
+
+        if (found.length === 0) {
+            return null
+        }
+
+        return found[0]
     }
 
     acceptPatch(fieldPatch) {
         const areaMap = fieldPatch.areaMap ? fieldPatch.areaMap.applyTo(this.areaMap) : this.areaMap
-        const objectMap = fieldPatch.objectMap ? fieldPatch.objectMap.applyTo(this.objectMap) : this.objectMap
-        return new Field(areaMap, objectMap)
+        const occupierMap = fieldPatch.occupierMap ? fieldPatch.occupierMap.applyTo(this.occupierMap) : this.occupierMap
+
+        const positions = new Set([...occupierMap.values()].map((o) => o.position))
+        if (positions.size < occupierMap.size) { // invalid
+            return null
+        }
+
+        return new Field(areaMap, occupierMap)
     }
 }
 
 class FieldPatch {
-    constructor(areaMapPatch, objectMapPatch) {
+    constructor(areaMapPatch, occupierMapPatch) {
         this.areaMap = areaMapPatch;
-        this.objectMap = objectMapPatch
+        this.occupierMap = occupierMapPatch
     }
 }
 
@@ -100,9 +124,9 @@ class AreaPatch {
     }
 }
 
-class ObjectsPatch {
-    constructor(objectMapPatch) {
-        this.objectMap = objectMapPatch
+class OccupierPatch {
+    constructor(occupierMapPatch) {
+        this.occupierMap = occupierMapPatch
     }
 }
 
@@ -120,4 +144,4 @@ const initArea = (entries) => {
     return area
 }
 
-const initObjects = (objectArray) => new Map(objectArray.map((o) => [o.id, o]))
+const initOccupiers = (OccupierArray) => new Map(OccupierArray.map((o) => [o.id, o]))

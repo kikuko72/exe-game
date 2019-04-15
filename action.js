@@ -5,7 +5,7 @@ class Move {
         this.objectId = objectId
         this.direction = direction
         this.field = field
-        this.target = this.field.objectMap.get(objectId)
+        this.target = this.field.getObjectById(objectId)
     }
 
     isValid() {
@@ -13,20 +13,20 @@ class Move {
         if (!toPosition) {
             return false
         }
-        const multiOccupiers = this.field.getObjects(toPosition).filter((o) => this.target.isOccupier && o.isOccupier).length > 0
+        const alreadyOccupied = !!this.field.getOccupier(toPosition)
 
         const targetAreaState = this.field.getArea(toPosition)
         const falling = targetAreaState.condition === CONDITION.HOLE && !this.target.isFloating
         const enterable = targetAreaState.owner === this.target.group
 
-        const valid = !multiOccupiers && !falling && enterable
+        const valid = !alreadyOccupied && !falling && enterable
 
         return valid
     }
 
     toFieldPatch() {
         if (this.isValid()) {
-            return new ObjectsPatch(new Patch([[this.objectId, this.target.move(this.direction)]]))
+            return new OccupierPatch(new Patch([[this.objectId, this.target.move(this.direction)]]))
         }
         return null
     }

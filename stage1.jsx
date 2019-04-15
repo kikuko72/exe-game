@@ -4,7 +4,7 @@ const field = new Field(
     initArea([
         [pos(3,0), PLAYER_AREA.newCondition(CONDITION.HOLE)]
     ])
-    , initObjects([
+    , initOccupiers([
         createPlayer(),
         createEnemy({id: 'enemy', position: pos(1,1), hp: 40})
 ]))
