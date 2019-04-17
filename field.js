@@ -135,6 +135,8 @@ class EffectPatch {
     }
 }
 
+const NOOPPatch = {}
+
 const initArea = (entries) => {
     const area = new Map([
         [pos(0,0), ENEMY_AREA], [pos(1,0), ENEMY_AREA], [pos(2,0), ENEMY_AREA], [pos(3,0), PLAYER_AREA], [pos(4,0), PLAYER_AREA], [pos(5,0), PLAYER_AREA],

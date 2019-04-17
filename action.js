@@ -28,7 +28,7 @@ class Move {
         if (this.isValid()) {
             return new OccupierPatch(new Patch([[this.objectId, this.target.move(this.direction)]]))
         }
-        return null
+        return NOOPPatch
     }
 }
 
@@ -45,6 +45,6 @@ class Attack {
         if (this.isValid()) {
             return new EffectPatch(new Patch([[this.object.id, this.object]]))
         }
-        return null
+        return NOOPPatch
     }
 }
