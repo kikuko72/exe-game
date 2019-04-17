@@ -8,7 +8,7 @@ const REPRESENTATION_MAP = new Map([
 const VisibleObject = (props) => {
     return (
         <div className="visible-object">
-          {REPRESENTATION_MAP.get(props.object.id)}
+          {REPRESENTATION_MAP.get(props.representationKey)}
         </div>
     )
 }
@@ -26,10 +26,11 @@ const HitPoint = (props) => {
     return null
 }
 
-const CellObjects = (props) => (
+const CellOccupier = (props) => (
+    props.occupier === null ? null :
     <div className="area-cell-container">
-        <VisibleObject object={props.object}/>
-        <HitPoint object={props.object}/>
+        <VisibleObject representationKey={props.occupier.id}/>
+        <HitPoint object={props.occupier}/>
     </div>
 )
 
@@ -37,14 +38,13 @@ const AreaView = (props) => {
     const classes = ['area-cell']
     classes.push(props.area.owner === GROUP.PLAYER ? 'player-own' : 'enemy-own')
 
-    const objects = props.objects.map((o) => <CellObjects key={o.id} object={o}/>)
     return (
         <div className={classes.join(' ')}>
             <div className="area-cell-container">
                 <div className="area-condition">
                     {REPRESENTATION_MAP.get(props.area.condition)}
                 </div>
-                {objects}
+                <CellOccupier occupier={props.occupier} />
             </div>
         </div>
     )
@@ -55,7 +55,7 @@ const FieldView = (props) => {
         const columns = row.map(pos =>
             <AreaView key={pos.x + '-' + pos.y}
                       area={props.field.getArea(pos)}
-                      objects={props.field.getObjects(pos)}/>
+                      occupier={props.field.getOccupier(pos)}/>
         )
         return (
             <div className="area-row" key={row[0].y}>
