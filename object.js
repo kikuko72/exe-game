@@ -31,3 +31,25 @@ class Character extends VisibleObjectBase {
 const PLAYER_ID = 'player'
 const createPlayer = () => new Character({id: PLAYER_ID, group: GROUP.PLAYER, position: pos(4,1), hp: 100})
 const createEnemy = (state) => new Character({id: state.id, group: GROUP.ENEMY, position: state.position, hp: state.hp})
+
+class AttackObject extends VisibleObjectBase {
+    constructor(state) {
+        super(state)
+        this.template = state.template
+        this.isCharacter = false
+        this.isOccupier = false
+        this.isFloating = this.template.isFloating
+    }
+
+    next(field) {
+        return this.template.controller(this, field)
+    }
+}
+
+class AttackTemplate {
+    constructor(state) {
+        this.power = state.power
+        this.controller = state.controller
+        this.isFloating = typeof state.isFloating !== 'undefined' ? state.isFloating : false
+    }
+}

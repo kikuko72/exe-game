@@ -31,3 +31,20 @@ class Move {
         return null
     }
 }
+
+class Attack {
+    constructor(object) {
+        this.object = object
+    }
+
+    isValid() {
+        return true
+    }
+
+    toFieldPatch() {
+        if (this.isValid()) {
+            return new EffectPatch(new Patch([[this.object.id, this.object]]))
+        }
+        return null
+    }
+}

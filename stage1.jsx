@@ -11,6 +11,15 @@ const field = new Field(
 
 REPRESENTATION_MAP.set('enemy', '敵')
 
+const ATTACK = {
+    SHOCK_WAVE : new AttackTemplate(
+        {
+            power: 10, 
+            controller : (self, field) => new Move(self.id, self.group === GROUP.ENEMY ? DIRECTION.RIGHT : DIRECTION.LEFT, field) // dummy
+        })
+}
+REPRESENTATION_MAP.set(ATTACK.SHOCK_WAVE, '波')
+
 ReactDOM.render(
     <GameView field={field}/>,
     document.getElementById('app')

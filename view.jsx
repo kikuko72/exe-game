@@ -38,6 +38,7 @@ const AreaView = (props) => {
     const classes = ['area-cell']
     classes.push(props.area.owner === GROUP.PLAYER ? 'player-own' : 'enemy-own')
 
+    const effects = props.effects.map(e => <VisibleObject key={e.id} representationKey={e.template}/>)
     return (
         <div className={classes.join(' ')}>
             <div className="area-cell-container">
@@ -45,6 +46,7 @@ const AreaView = (props) => {
                     {REPRESENTATION_MAP.get(props.area.condition)}
                 </div>
                 <CellOccupier occupier={props.occupier} />
+                {effects}
             </div>
         </div>
     )
@@ -55,7 +57,8 @@ const FieldView = (props) => {
         const columns = row.map(pos =>
             <AreaView key={pos.x + '-' + pos.y}
                       area={props.field.getArea(pos)}
-                      occupier={props.field.getOccupier(pos)}/>
+                      occupier={props.field.getOccupier(pos)}
+                      effects={props.field.getEffects(pos)}/>
         )
         return (
             <div className="area-row" key={row[0].y}>

@@ -59,9 +59,10 @@ const PLAYER_AREA = new AreaState(GROUP.PLAYER, CONDITION.NORMAL)
 const ENEMY_AREA = new AreaState(GROUP.ENEMY, CONDITION.NORMAL)
 
 class Field {
-    constructor(areaMap, occupierMap) {
+    constructor(areaMap, occupierMap, effectMap) {
         this.areaMap = areaMap;
         this.occupierMap = occupierMap
+        this.effectMap = effectMap
     }
 
     getArea(position) {
@@ -73,7 +74,7 @@ class Field {
     }
 
     getObjectById(objectId) {
-        return this.occupierMap.get(objectId)
+        return this.occupierMap.get(objectId) || this.effectMap ? this.effectMap.get(objectId) : null
     }
 
     getOccupier(position) {
@@ -90,23 +91,29 @@ class Field {
         return found[0]
     }
 
+    getEffects(position) {
+        return this.effectMap ? [...this.effectMap.values()].filter(e => e.position === position) : []
+    }
+
     acceptPatch(fieldPatch) {
         const areaMap = fieldPatch.areaMap ? fieldPatch.areaMap.applyTo(this.areaMap) : this.areaMap
         const occupierMap = fieldPatch.occupierMap ? fieldPatch.occupierMap.applyTo(this.occupierMap) : this.occupierMap
+        const effectMap = fieldPatch.effectMap ? fieldPatch.effectMap.applyTo(this.effectMap) : this.effectMap
 
         const positions = new Set([...occupierMap.values()].map((o) => o.position))
         if (positions.size < occupierMap.size) { // invalid
             return null
         }
 
-        return new Field(areaMap, occupierMap)
+        return new Field(areaMap, occupierMap, effectMap)
     }
 }
 
 class FieldPatch {
-    constructor(areaMapPatch, occupierMapPatch) {
+    constructor(areaMapPatch, occupierMapPatch, effectMapPatch) {
         this.areaMap = areaMapPatch;
         this.occupierMap = occupierMapPatch
+        this.effectMap = effectMapPatch
     }
 }
 
@@ -119,6 +126,12 @@ class AreaPatch {
 class OccupierPatch {
     constructor(occupierMapPatch) {
         this.occupierMap = occupierMapPatch
+    }
+}
+
+class EffectPatch {
+    constructor(effectMapPatch) {
+        this.effectMap = effectMapPatch
     }
 }
 
