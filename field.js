@@ -80,10 +80,6 @@ class Field {
         return [...this.occupierMap.values()].filter((o) => o.position === position)
     }
 
-    getObjectById(objectId) {
-        return this.occupierMap.get(objectId)
-    }
-
     getOccupier(position) {
         const found = [...this.occupierMap.values()].filter((o) => o.position === position)
 
