@@ -6,7 +6,7 @@ class Patch {
     }
 
     applyTo(map) {
-        const altMap = new Map([...map.entries()])
+        const altMap = new Map(map ? [...map.entries()] : [])
         this.entries.forEach((e) => altMap.set(e[0], e[1]))
         return altMap
     }
