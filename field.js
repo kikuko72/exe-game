@@ -102,7 +102,8 @@ class Field {
 
         const positions = new Set([...occupierMap.values()].map((o) => o.position))
         if (positions.size < occupierMap.size) { // invalid
-            return null
+            console.error('invalid status: multi occupier')
+            return this
         }
 
         return new Field(areaMap, occupierMap, effectMap)
