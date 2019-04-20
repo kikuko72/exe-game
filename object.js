@@ -10,9 +10,9 @@ class VisibleObjectBase {
         this.isFloating = state.isFloating
     }
 
-    move(direction) {
+    move(position) {
         const copied = Object.assign({}, this)
-        copied.position = this.position.next(direction)
+        copied.position = position
         return new this.constructor(copied)
     }
 }
@@ -25,6 +25,13 @@ class Character extends VisibleObjectBase {
         this.isCharacter = true
         this.isOccupier = true
         this.isFloating = false
+    }
+
+    canEnter(areaState) {
+        const own = areaState.owner === this.group
+        const falling = areaState.condition === CONDITION.HOLE && !this.isFloating
+
+        return areaState.isFree() && own && !falling
     }
 }
 

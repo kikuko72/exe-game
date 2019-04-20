@@ -38,17 +38,26 @@ const GROUP = {
 }
 
 class AreaState {
-    constructor(owner, condition) {
+    constructor(owner, condition, occupier) {
         this.owner = owner
         this.condition = condition
+        this.occupier = occupier ? occupier : null
     }
 
     stolenBy(altOwner) {
-        return new AreaState(altOwner, this.condition)
+        return new AreaState(altOwner, this.condition, this.occupier)
     }
 
     newCondition(condition) {
-        return new AreaState(this.owner, condition)
+        return new AreaState(this.owner, condition, this.occupier)
+    }
+
+    isFree() {
+        return !!this.occupier
+    }
+
+    occupiedBy(occupier) {
+        return new AreaState(this.owner, this.condition, occupier)
     }
 }
 const CONDITION = {
