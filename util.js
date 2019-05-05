@@ -17,17 +17,23 @@ class Patch {
     }
 }
 
-class PairingPatch {
+class InjectiveMap {
     constructor(entries) {
-        this.entries = entries
-        this.values = new Set()
-        entries.forEach(e => this.values.add(e[1]))
+        this.map = new Map(entries)
+        const codomain = new Set()
+        entries.forEach(e => codomain.add(e[1]))
+        this.mappedCodomain = codomain
     }
 
-    applyTo(map) {
-        const oldEntries = map ? [...map.entries()] : []
-        const altMap = new Map(oldEntries.filter(e => !this.values.has(e[1])))
-        this.entries.forEach(e => altMap.set(e[0], e[1]))
-        return altMap
+    applyPatch(entry) {
+        const domain = entry[0]
+        const codomain = entry[1]
+
+        if (this.mappedCodomain.has(codomain)) {
+            return this.map.get(domain) === codomain ? this : undefined
+        }
+
+        const altEntries = [...this.map.entries()].map(e => e[0] === domain ? [domain, codomain] : e)
+        return new InjectiveMap(altEntries)
     }
 }
